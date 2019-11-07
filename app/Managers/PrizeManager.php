@@ -75,4 +75,71 @@ class PrizeManager
 
     }
 
+    public function declinePrize()
+    {
+
+        if ( $this->prize->collected_at !== null )
+            throw new \Exception('Prize already collected');
+
+        $this->prize->declined_at = time();
+        $this->prize->user_id = $this->user->id;
+
+        return $this->prize->save();
+
+    }
+
+    public function collectPrize()
+    {
+
+        if ( $this->prize->collected_at !== null )
+            throw new \Exception('Prize already collected');
+
+        if ( $this->prize->declined_at !== null )
+            throw new \Exception('Prize already declined');
+
+        $this->prize->collected_at = time();
+        $this->prize->user_id = $this->user->id;
+        $this->prize->save();
+
+        if ( $this->prize->type === Prize::PRIZE_TYPE_BONUS ) {
+             $this->user->collectBonus($this->prize);
+        }
+
+        if ( $this->prize->type === Prize::PRIZE_TYPE_ITEM ) {
+
+            $gift = Gift::where('id','=',$this->prize->value)
+                ->first();
+
+            $gift->quantity = $gift->quantity - 1;
+            $gift->save();
+
+        }
+
+        return $this->prize->save();
+
+    }
+
+    public function convertToBonus()
+    {
+
+        if ( $this->prize->collected_at !== null )
+            throw new \Exception('Prize already collected');
+
+        if ( $this->prize->declined_at !== null )
+            throw new \Exception('Prize already declined');
+
+        if ( $this->prize->type !== Prize::PRIZE_TYPE_MONEY )
+            throw new \Exception('Can convert only money prize');
+
+        $this->prize->type = Prize::PRIZE_TYPE_BONUS;
+        $this->prize->value = round($this->prize->value * Prize::MONEY_TO_BONUS_EXCHANGE_FACTOR);
+
+        return $this->prize->save();
+
+    }
+
+
+
+
+
 }

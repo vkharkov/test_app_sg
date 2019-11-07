@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Entities\Prize;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -16,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name', 'email', 'password','bonus_amount'
     ];
 
     /**
@@ -36,4 +37,16 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function collectBonus(Prize $prize)
+    {
+
+        if ( $prize->type !== Prize::PRIZE_TYPE_BONUS )
+            throw new \Exception('Not bonus prize');
+
+        $this->bonus_amount = $this->bonus_amount + $prize->value;
+
+        return $this->save();
+
+    }
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class UpdatePrizesTableSetUserIdToNull extends Migration
+class AddBonusAmountToUser extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class UpdatePrizesTableSetUserIdToNull extends Migration
      */
     public function up()
     {
-        Schema::table('prizes', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id')->nullable()->change();
+        Schema::table('users', function (Blueprint $table) {
+            $table->bigInteger('bonus_amount')->nullable()->default(0)->comment('User bonus amount');
         });
     }
 
@@ -25,6 +25,8 @@ class UpdatePrizesTableSetUserIdToNull extends Migration
      */
     public function down()
     {
-
+        Schema::table('users', function (Blueprint $table) {
+            $table->removeColumn('bonus_amount');
+        });
     }
 }

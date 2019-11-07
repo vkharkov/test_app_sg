@@ -35,7 +35,8 @@ class Prize extends Model
         'created_at',
         'updated_at',
         'sended_at',
-        'collected_at'
+        'collected_at',
+        'declined_at'
     ];
 
     public static function getPrizeTypes()
