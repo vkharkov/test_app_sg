@@ -122,19 +122,13 @@ class PrizeManager
     public function convertToBonus()
     {
 
-        if ( $this->prize->collected_at !== null )
-            throw new \Exception('Prize already collected');
-
-        if ( $this->prize->declined_at !== null )
-            throw new \Exception('Prize already declined');
-
         if ( $this->prize->type !== Prize::PRIZE_TYPE_MONEY )
             throw new \Exception('Can convert only money prize');
 
         $this->prize->type = Prize::PRIZE_TYPE_BONUS;
         $this->prize->value = round($this->prize->value * Prize::MONEY_TO_BONUS_EXCHANGE_FACTOR);
 
-        return $this->prize->save();
+        return $this->prize;
 
     }
 

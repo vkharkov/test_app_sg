@@ -39,6 +39,11 @@ class Prize extends Model
         'declined_at'
     ];
 
+    public function user()
+    {
+        return $this->belongsTo('App\User');
+    }
+
     public static function getPrizeTypes()
     {
         $reflectionClass = new \ReflectionClass(self::class);

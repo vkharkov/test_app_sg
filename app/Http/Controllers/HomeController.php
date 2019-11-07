@@ -133,7 +133,7 @@ class HomeController extends Controller
         $pm->setUser($user);
         $pm->setPrize($prize);
 
-        if ( $pm->convertToBonus() === true ) {
+        if ( $pm->convertToBonus() instanceof Prize ) {
 
             return [
                 'status' => $pm->collectPrize()
