@@ -39,11 +39,15 @@ class Users extends Seeder
 
         foreach (self::$defaultUsers as $user ) {
 
-            DB::table('users')->insert([
-                'name' =>  $user['name'],
-                'email' => $user['mail'],
-                'password' => bcrypt($user['pass']),
-            ]);
+            if ( DB::table('users')->where('email','=', $user['mail'])->count('id') === 0 ) {
+
+                DB::table('users')->insert([
+                    'name' => $user['name'],
+                    'email' => $user['mail'],
+                    'password' => bcrypt($user['pass']),
+                ]);
+
+            }
 
         }
     }
